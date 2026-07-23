@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PLOD Lite</title>
+</head>
+<body style="font-family:Arial;background:#0b2d5c;color:white;text-align:center;padding:40px;">
+<h1>PLOD Lite</h1>
+<p>Property and Land Occupants Database</p>
+
+<button>My Profile</button><br><br>
+<button>Search Resident</button><br><br>
+<button>Applications</button><br><br>
+<button>Download Letter</button>
+
+</body>
+</html>
