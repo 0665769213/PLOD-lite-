@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLOD Lite</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7f5;
+    color: #17231c;
+}
+
+header {
+    background: #073b2a;
+    color: white;
+    padding: 22px 18px;
+    text-align: center;
+}
+
+.logo {
+    width: 65px;
+    height: 65px;
+    margin: auto;
+    background: white;
+    color: #073b2a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+header h1 {
+    margin-top: 10px;
+    font-size: 28px;
+}
+
+header p {
+    margin-top: 5px;
+    font-size: 13px;
+    opacity: .9;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 18px;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.card h2 {
+    color: #073b2a;
+    margin-bottom: 10px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 16px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.menu-btn {
+    background: #e7f0eb;
+    color: #073b2a;
+}
+
+.primary {
+    background: #073b2a;
+    color: white;
+}
+
+.secondary {
+    background: #d9e8df;
+    color: #073b2a;
+}
+
+.danger {
+    background: #f5dddd;
+    color: #8a1c1c;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 13px;
+    margin: 7px 0 12px;
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    font-size: 15px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.back {
+    margin-bottom: 15px;
+    background: transparent;
+    color: #073b2a;
+    padding: 5px;
+}
+
+.profile-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-row strong {
+    display: block;
+    color: #073b2a;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #e2f1e7;
+    color: #176b3b;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 25px 10px;
+    color: #777;
+    font-size: 12px;
+}
+
+.notice {
+    background: #fff8dc;
+    border-left: 5px solid #d4a900;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media(max-width:400px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">PLOD</div>
+    <h1>PLOD Lite</h1>
+    <p>Property & Land Occupants Database</p>
+</header>
+
+<div class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+
+    <div class="card">
+        <h2>Welcome</h2>
+        <p>Access your property, occupancy and application information.</p>
+    </div>
+
+    <div class="notice">
+        <strong>Important:</strong>
+        Your information is managed by the authorised PLOD administrator.
+    </div>
+
+    <div class="grid">
+
+        <button class="menu-btn" onclick="showPage('search')">
+            🔎<br>Search Resident
+        </button>
+
+        <button class="menu-btn" onclick="showPage('profile')">
+            👤<br>My Profile
+        </button>
+
+        <button class="menu-btn" onclick="showPage('documents')">
+            📄<br>My Documents
+        </button>
+
+        <button class="menu-btn" onclick="showPage('applications')">
+            📝<br>Applications
+        </button>
+
+        <button class="menu-btn" onclick="showPage('stand')">
+            📍<br>My Stand
+        </button>
+
+        <button class="menu-btn" onclick="showPage('contact')">
+            ☎️<br>Contact Admin
+        </button>
+
+    </div>
+
+    <div class="card" style="margin-top:15px;">
+        <button class="primary" style="width:100%;" onclick="showPage('admin')">
+            🔐 ADMINISTRATION
+        </button>
+    </div>
+
+</section>
+
+
+<!-- SEARCH -->
+<section id="search" class="page">
+
+<button class="back" onclick="showPage('home')">← Back</button>
+
+<div class="card">
+<h2>🔎 Search Resident</h2>
+
+<label>Enter surname or ID number</label>
+<input id="searchInput" placeholder="Example: Dlamini">
+
+<button class="primary" style="width:100%;" onclick="searchResident()">
+Search
+</button>
+
+<div id="searchResults" style="margin-top:15px;"></div>
+
+</div>
+</section>
+
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+
+<button class="back" onclick="showPage('home')">← Back</button>
+
+<div class="card">
+<h2>👤 My Profile</h2>
+
+<div class="profile-row">
+<strong>Name</strong>
+<span id="profileName">Not available</span>
+</div>
+
+<div class="profile-row">
+<strong>ID Number</strong>
+<span id="profileId">Not available</span>
+</div>
+
+<div class="profile-row">
+<strong>Stand Number</strong>
+<span id="profileStand">Not available</span>
+</div>
+
+<div class="profile-row">
+<strong>Address</strong>
+<span id="profileAddress">Not available</span>
+</div>
+
+<div class="profile-row">
+<strong>Contact</strong>
+<span id="profileContact">Not available</span>
+</div>
+
+<div class="profile-row">
+<strong>Status</strong>
+<span class="status">Registered</span>
+</div>
+
+</div>
+</section>
+
+
+<!-- DOCUMENTS -->
+<section id="documents" class="page">
+
+<button class="back" onclick="showPage('home')">← Back</button>
+
+<div class="card">
+<h2>📄 My Documents</h2>
+
+<button class="secondary" style="width:100%;margin-bottom:10px;"
+onclick="printDocument('Proof of Residency')">
+Proof of Residency
+</button>
+
+<button class="secondary" style="width:100%;margin-bottom:10px;"
+onclick="printDocument('Confirmation of Permanent Occupancy')">
+Confirmation of Permanent Occupancy
+</button>
+
+<button class="secondary" style="width:100%;margin-bottom:10px;"
+onclick="printDocument('PLOD Resident Record')">
+PLOD Resident Record
+</button>
+
+</div>
+</section>
+
+
+<!-- APPLICATIONS -->
+<section id="applications" class="page">
+
+<button class="back" onclick="showPage('home')">← Back</button>
+
+<div class="card">
+<h2>📝 Applications</h2>
+
+<p style="margin-bottom:15px;">
+Check the status of your applications.
+</p>
+
+<div class="profile-row">
+<strong>Occupancy Application</strong>
+<span class="status">Registered</span>
+</div>
+
+<div class="profile-row">
+<strong>Property Documentation</strong>
+<span class="status">Pending Review</span>
+</div>
+
+</div>
+</section>
+
+
+<!-- STAND -->
+<section id="stand" class="page">
+
+<button class="back" onclick="showPage('home')">← Back</button>
+
+<div class="card">
+<h2>📍 My Stand</h2>
+
+<div class="profile-row">
+<strong>Stand Number</strong>
+<span id="standNumber">Not available</span>
+</div>
+
+<div class="profile-row">
+<strong>Location</strong>
+<span id="standLocation">Not available</span>
+</div>
+
+<div class="profile-row">
+<strong>Measurement</strong>
+<span id="standMeasurement">Not available</span>
+</div>
+
+<button class="primary" style="width:100%;margin-top:15px;"
+onclick="getLocation()">
+📍 Capture GPS Location
+</button>
+
+<p id="locationResult" style="margin-top:12px;"></p>
+
+</div>
+</section>
+
+
+<!-- CONTACT -->
+<section id="contact" class="page">
+
+<button class="back" onclick="showPage('home')">← Back</button>
+
+<div class="card">
+<h2>☎️ Contact Admin</h2>
+
+<p style="margin-bottom:15px;">
+For corrections, applications or document requests, contact the authorised PLOD administrator.
+</p>
+
+<button class="primary" style="width:100%;"
+onclick="alert('Please add your official PLOD contact number here.')">
+Contact PLOD
+</button>
+
+</div>
+</section>
+
+
+<!-- ADMIN -->
+<section id="admin" class="page">
+
+<button class="back" onclick="showPage('home')">← Back</button>
+
+<div class="card">
+<h2>🔐 Admin Dashboard</h2>
+
+<div class="notice">
+Administrator access only.
+</div>
+
+<button class="primary" style="width:100%;margin-bottom:10px;"
+onclick="showPage('addResident')">
+➕ Add Resident
+</button>
+
+<button class="secondary" style="width:100%;margin-bottom:10px;"
+onclick="showPage('search')">
+🔎 Search Database
+</button>
+
+<button class="secondary" style="width:100%;margin-bottom:10px;"
+onclick="showPage('print')">
+🖨 Print / PDF
+</button>
+
+<button class="danger" style="width:100%;"
+onclick="clearDemoData()">
+Clear Test Data
+</button>
+
+</div>
+</section>
+
+
+<!-- ADD RESIDENT -->
+<section id="addResident" class="page">
+
+<button class="back" onclick="showPage('admin')">← Back</button>
+
+<div class="card">
+<h2>➕ Add Resident</h2>
+
+<label>Full Name</label>
+<input id="newName" placeholder="Full name">
+
+<label>ID Number</label>
+<input id="newId" placeholder="ID number">
+
+<label>Surname</label>
+<input id="newSurname" placeholder="Surname">
+
+<label>Stand Number</label>
+<input id="newStand" placeholder="Stand number">
+
+<label>Address</label>
+<input id="newAddress" placeholder="Address">
+
+<label>Contact Number</label>
+<input id="newContact" placeholder="Contact number">
+
+<label>Location</label>
+<input id="newLocation" placeholder="Area / township">
+
+<button class="primary" style="width:100%;"
+onclick="saveResident()">
+Save Resident
+</button>
+
+<p id="saveMessage" style="margin-top:12px;"></p>
+
+</div>
+</section>
+
+
+<!-- PRINT -->
+<section id="print" class="page">
+
+<button class="back" onclick="showPage('admin')">← Back</button>
+
+<div class="card">
+<h2>🖨 Print / PDF</h2>
+
+<p style="margin-bottom:15px;">
+Select a document to print or save as PDF.
+</p>
+
+<button class="secondary" style="width:100%;margin-bottom:10px;"
+onclick="printDocument('Proof of Residency')">
+Proof of Residency
+</button>
+
+<button class="secondary" style="width:100%;margin-bottom:10px;"
+onclick="printDocument('Confirmation of Permanent Occupancy')">
+Permanent Occupancy Confirmation
+</button>
+
+<button class="secondary" style="width:100%;"
+onclick="printDocument('PLOD Resident Record')">
+Resident Record
+</button>
+
+</div>
+</section>
+
+</div>
+
+<footer>
+PLOD Lite<br>
+Property & Land Occupants Database
+</footer>
+
+
+<script>
+
+/* ================================
+   PLOD LITE DATABASE
+================================ */
+
+let residents = JSON.parse(localStorage.getItem("plodResidents")) || [
+
+    {
+        name: "Test Resident",
+        id: "0000000000000",
+        surname: "Resident",
+        stand: "TEST-001",
+        address: "Test Address",
+        contact: "0000000000",
+        location: "Pretoria"
+    }
+
+];
+
+
+/* PAGE NAVIGATION */
+
+function showPage(pageId) {
+
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+
+    window.scrollTo(0,0);
+}
+
+
+/* SEARCH */
+
+function searchResident() {
+
+    let query = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    let results = document.getElementById("searchResults");
+
+    if (!query) {
+        results.innerHTML = "<p>Please enter a surname or ID number.</p>";
+        return;
+    }
+
+    let found = residents.filter(r =>
+        r.surname.toLowerCase().includes(query) ||
+        r.id.includes(query) ||
+        r.name.toLowerCase().includes(query)
+    );
+
+    if (found.length === 0) {
+        results.innerHTML = "<p>No resident found.</p>";
+        return;
+    }
+
+    results.innerHTML = "";
+
+    found.forEach((resident, index) => {
+
+        let div = document.createElement("div");
+
+        div.className = "card";
+
+        div.innerHTML = `
+            <h3>${resident.name}</h3>
+            <p>Stand: ${resident.stand}</p>
+            <p>Location: ${resident.location}</p>
+            <br>
+            <button class="primary"
+            onclick="viewResident(${index})">
+            View Profile
+            </button>
+        `;
+
+        results.appendChild(div);
+
+    });
+}
+
+
+/* VIEW PROFILE */
+
+function viewResident(index) {
+
+    let resident = residents[index];
+
+    document.getElementById("profileName").textContent = resident.name;
+    document.getElementById("profileId").textContent = resident.id;
+    document.getElementById("profileStand").textContent = resident.stand;
+    document.getElementById("profileAddress").textContent = resident.address;
+    document.getElementById("profileContact").textContent = resident.contact;
+
+    document.getElementById("standNumber").textContent = resident.stand;
+    document.getElementById("standLocation").textContent = resident.location;
+
+    showPage("profile");
+}
+
+
+/* ADD RESIDENT */
+
+function saveResident() {
+
+    let resident = {
+
+        name: document.getElementById("newName").value,
+        id: document.getElementById("newId").value,
+        surname: document.getElementById("newSurname").value,
+        stand: document.getElementById("newStand").value,
+        address: document.getElementById("newAddress").value,
+        contact: document.getElementById("newContact").value,
+        location: document.getElementById("newLocation").value
+
+    };
+
+    if (!resident.name || !resident.id || !resident.stand) {
+
+        document.getElementById("saveMessage").textContent =
+        "Please enter at least the name, ID and stand number.";
+
+        return;
+    }
+
+    residents.push(resident);
+
+    localStorage.setItem(
+        "plodResidents",
+        JSON.stringify(residents)
+    );
+
+    document.getElementById("saveMessage").textContent =
+    "Resident successfully saved.";
+
+    document.querySelectorAll("#addResident input")
+        .forEach(input => input.value = "");
+
+}
+
+
+/* GPS */
+
+function getLocation() {
+
+    let result = document.getElementById("locationResult");
+
+    if (!navigator.geolocation) {
+
+        result.textContent =
+        "GPS is not supported on this device.";
+
+        return;
+    }
+
+    result.textContent = "Getting location...";
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            result.innerHTML =
+            "Latitude: " + lat +
+            "<br>Longitude: " + lon;
+
+        },
+
+        function() {
+
+            result.textContent =
+            "Unable to get GPS location.";
+
+        }
+
+    );
+}
+
+
+/* PRINT DOCUMENT */
+
+function printDocument(title) {
+
+    let resident =
+        residents[0] || {
+            name: "Resident",
+            stand: "Not available",
+            address: "Not available"
+        };
+
+    let printWindow = window.open("", "_blank");
+
+    printWindow.document.write(`
+
+        <html>
+
+        <head>
+
+        <title>${title}</title>
+
+        <style>
+
+        body {
+            font-family: Arial;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #073b2a;
+        }
+
+        .line {
+            border-bottom: 1px solid #000;
+            padding: 10px 0;
+        }
+
+        </style>
+
+        </head>
+
+        <body>
+
+        <h1>PLOD Lite</h1>
+
+        <h2>${title}</h2>
+
+        <p>This document confirms the information recorded in the PLOD Lite database.</p>
+
+        <div class="line">
+        <strong>Resident:</strong> ${resident.name}
+        </div>
+
+        <div class="line">
+        <strong>Stand:</strong> ${resident.stand}
+        </div>
+
+        <div class="line">
+        <strong>Address:</strong> ${resident.address}
+        </div>
+
+        <br><br>
+
+        <p>Generated by PLOD Lite.</p>
+
+        <br>
+
+        ______________________________
+        <br>
+        Authorised Administrator
+
+        </body>
+
+        </html>
+
+    `);
+
+    printWindow.document.close();
+
+    printWindow.print();
+}
+
+
+/* CLEAR TEST DATA */
+
+function clearDemoData() {
+
+    if (confirm("Delete all locally stored PLOD test data?")) {
+
+        localStorage.removeItem("plodResidents");
+
+        location.reload();
+
+    }
+
+}
+
+
+/* LOAD FIRST RESIDENT */
+
+window.onload = function() {
+
+    if (residents.length > 0) {
+
+        let resident = residents[0];
+
+        document.getElementById("profileName").textContent =
+        resident.name;
+
+        document.getElementById("profileId").textContent =
+        resident.id;
+
+        document.getElementById("profileStand").textContent =
+        resident.stand;
+
+        document.getElementById("profileAddress").textContent =
+        resident.address;
+
+        document.getElementById("profileContact").textContent =
+        resident.contact;
+
+        document.getElementById("standNumber").textContent =
+        resident.stand;
+
+        document.getElementById("standLocation").textContent =
+        resident.location;
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
